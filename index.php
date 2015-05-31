@@ -26,8 +26,8 @@
 <html>
     <head>
         <title>ReNotifier Demo - Standard Form</title>
-        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>   
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     </head>
@@ -56,8 +56,8 @@
             <label for="exampleInputEmail1" class="control-label">Email address</label>
             <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
           </div>
-          <div class="form-group">
-            <label>Your favorite color</label>
+          <div class="form-group color-group">
+            <label class="control-label">Your favorite color</label>
             <div class="radio">
               <label><input type="radio" name="color" value="red">Red</label>
             </div>
@@ -83,14 +83,34 @@
       return regex.test(email);
     }    
 
+    function formIsValid() {
+        var valid = true;
+        var alertMessage = "";
+          if (!IsEmail($("#email").val())) {
+            // Invalid email! Let's display a simple error:
+            $(".email-group").removeClass("has-success").addClass("has-error");
+            alertMessage = "Please enter a valid email address. ";
+            valid = false;
+          }
+
+          if ($('input[name=color]:checked', '#theForm').val()===undefined) {
+            $(".color-group").removeClass("has-success").addClass("has-error");            
+            alertMessage = alertMessage + "Please select a color!";
+            valid = false;
+          } else {
+            $(".color-group").removeClass("has-error").addClass("has-success");
+          }
+          if (!valid) {
+            alert(alertMessage);
+          }
+          return valid;
+    }    
+
     $( document ).ready(function() {
 
       // We are gonna validate the email before the form is submitted
         $( "#theForm" ).submit(function( event ) {
-          if (!IsEmail($("#email").val())) {
-            // Invalid email! Let's display a simple error:
-            $(".email-group").removeClass("has-success").addClass("has-error");
-            alert("Please enter a valid email address.");
+          if (!formIsValid()) {
             event.preventDefault();
           }
         });
@@ -104,6 +124,13 @@
             $(".email-group").removeClass("has-success").addClass("has-error");
           }          
         });
+
+        
+      // remove error from color when selected
+        $("input[name=color]").click(function () {
+          $(".color-group").removeClass("has-error").addClass("has-success");
+        });
+
     });
     </script>
     </body>
